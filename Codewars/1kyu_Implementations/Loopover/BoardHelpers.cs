@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 
 namespace _1kyu_Implementations.Loopover
 {
@@ -37,6 +38,13 @@ namespace _1kyu_Implementations.Loopover
             var board2Readable = board2.Aggregate(seed, (currentRow, row) => row.Aggregate(currentRow, (currentCol, c) => currentCol + c) + "##");
 
             return board1Readable.Equals(board2Readable, StringComparison.Ordinal);
+        }
+
+        public static Tuple<int, int> FindPositionInBoard(this char[][] board1, char search)
+        {
+            var positionY = Array.FindIndex(board1, 0, board1.Length, x => x.Contains(search));
+            var positionX = Array.FindIndex(board1[positionY], 0, board1[positionY].Length, x => x.Equals(search));
+            return new Tuple<int, int>(positionX, positionY);
         }
     }
 }

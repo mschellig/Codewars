@@ -2,6 +2,9 @@
 {
     public static class MoveHelpers
     {
+        public static char[][] MoveBoard(this char[][] board, char direction, int rowOrCol) =>
+            MoveBoard(board, direction.ToString(), rowOrCol);
+
         public static char[][] MoveBoard(this char[][] board, string direction, int rowOrCol)
         {
             return direction.ToLower() switch
