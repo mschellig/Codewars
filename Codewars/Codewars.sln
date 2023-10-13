@@ -3,21 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8kyu_Implementations", "8kyu_Implementations\8kyu_Implementations.csproj", "{B85724FA-8BE3-4C93-8B69-D1C3230545FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8kyu_Implementations", "8kyu_Implementations\8kyu_Implementations.csproj", "{B85724FA-8BE3-4C93-8B69-D1C3230545FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7kyu_Implementations", "7kyu_Implementations\7kyu_Implementations.csproj", "{1EF8A28D-D3B2-4D5E-8D33-F30588DD408B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7kyu_Implementations", "7kyu_Implementations\7kyu_Implementations.csproj", "{1EF8A28D-D3B2-4D5E-8D33-F30588DD408B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6kyu_Implementations", "6kyu_Implementations\6kyu_Implementations.csproj", "{B50372CA-B2FA-4753-9375-E837FDE82E8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "6kyu_Implementations", "6kyu_Implementations\6kyu_Implementations.csproj", "{B50372CA-B2FA-4753-9375-E837FDE82E8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5kyu_Implementations", "5kyu_Implementations\5kyu_Implementations.csproj", "{A76CBB38-B690-40F7-A6B8-CE14906720A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5kyu_Implementations", "5kyu_Implementations\5kyu_Implementations.csproj", "{A76CBB38-B690-40F7-A6B8-CE14906720A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4kyu_Implementations", "4kyu_Implementations\4kyu_Implementations.csproj", "{26F1956C-AB13-4E6C-9509-849FE511E2AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4kyu_Implementations", "4kyu_Implementations\4kyu_Implementations.csproj", "{26F1956C-AB13-4E6C-9509-849FE511E2AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3kyu_Implementations", "3kyu_Implementations\3kyu_Implementations.csproj", "{E4EF8828-CD48-4CE5-A7FB-DCCD53E2D06C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3kyu_Implementations", "3kyu_Implementations\3kyu_Implementations.csproj", "{E4EF8828-CD48-4CE5-A7FB-DCCD53E2D06C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2kyu_Implementations", "2kyu_Implementations\2kyu_Implementations.csproj", "{70AE95BA-0603-4BF1-9D51-BAF197B03ADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2kyu_Implementations", "2kyu_Implementations\2kyu_Implementations.csproj", "{70AE95BA-0603-4BF1-9D51-BAF197B03ADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1kyu_Implementations", "1kyu_Implementations\1kyu_Implementations.csproj", "{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1kyu_Implementations", "1kyu_Implementations\1kyu_Implementations.csproj", "{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1kyu_TestingExecutables", "1kyu_TestingExecutables\1kyu_TestingExecutables.csproj", "{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
