@@ -49,6 +49,35 @@
             return movelist;
         }
 
+        public static List<Tuple<char, int>> FindPathPhase2(Tuple<int, int> currentposition, Tuple<int, int> targetposition, Tuple<int, int> dimensions)
+        {
+            var movelist = new List<Tuple<char, int>>();
+            if (currentposition.Equals(targetposition)) return movelist;
+
+            // for easier use, make dimensions match array logic
+            dimensions = new Tuple<int, int>(dimensions.Item1 - 1, dimensions.Item2 - 1);
+
+            //check which vertical way is faster
+            var distanceVertical = CalculateVerticalDistance(currentposition.Item2, targetposition.Item2, dimensions.Item1 + 1); // 'BAC' has a count of 3
+            //Add vertical moves to list
+            for (var i = 0; i < distanceVertical.Item2; i++)
+            {
+                movelist.Add(new Tuple<char, int>(distanceVertical.Item1, currentposition.Item1));
+            }
+
+            //Check which horizontal way is faster
+            var distanceHorizontal = CalculateHorizontalDistance(currentposition.Item1, targetposition.Item1, dimensions.Item1 + 1); // 'BAC' has a count of 3
+            //Add horizontal moves to list
+            for (var i = 0; i < distanceHorizontal.Item2; i++)
+            {
+                movelist.Add(new Tuple<char, int>(distanceHorizontal.Item1, targetposition.Item2));
+            }
+
+
+            return movelist;
+        }
+
+
         private static Tuple<char,int> CalculateHorizontalDistance(int startPosition, int targetPosition, int dimension)
         {
             var distanceLeft = (startPosition - targetPosition + dimension) % dimension;

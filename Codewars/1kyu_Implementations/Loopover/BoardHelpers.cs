@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NUnit.Framework.Interfaces;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 
 namespace _1kyu_Implementations.Loopover
@@ -45,6 +46,17 @@ namespace _1kyu_Implementations.Loopover
             var positionY = Array.FindIndex(board1, 0, board1.Length, x => x.Contains(search));
             var positionX = Array.FindIndex(board1[positionY], 0, board1[positionY].Length, x => x.Equals(search));
             return new Tuple<int, int>(positionX, positionY);
+        }
+
+        public static bool IsParity(this char[][] board1, char[][] board2, Tuple<int,int> dimensions)
+        {
+            var firstTile = board2[dimensions.Item2 - 2][dimensions.Item1 - 1];
+            var firstTileShould = board1[dimensions.Item2 - 2][dimensions.Item1 - 1];
+            var secondTile = board2[dimensions.Item2 - 1][dimensions.Item1 - 1];
+            var secondTileShould = board1[dimensions.Item2 - 1][dimensions.Item1 - 1];
+
+            return firstTile.Equals(secondTileShould) &&
+                   secondTile.Equals(firstTileShould);
         }
     }
 }

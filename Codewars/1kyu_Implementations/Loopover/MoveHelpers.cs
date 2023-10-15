@@ -2,19 +2,44 @@
 {
     public static class MoveHelpers
     {
+        public static char[][] MoveBoard(this char[][] board, List<Tuple<char, int>> movelist)
+        {
+            foreach (var move in movelist)
+            {
+                board.MoveBoard(move.Item1, move.Item2);
+            }
+            return board;
+        }
+
+        public static char[][] MoveBoard(this char[][] board, List<Tuple<string, int>> movelist)
+        {
+
+            foreach (var move in movelist)
+            {
+                board.MoveBoard(move.Item1, move.Item2);
+            }
+            return board;
+        }
+
+
+
         public static char[][] MoveBoard(this char[][] board, char direction, int rowOrCol) =>
             MoveBoard(board, direction.ToString(), rowOrCol);
 
         public static char[][] MoveBoard(this char[][] board, string direction, int rowOrCol)
         {
-            return direction.ToLower() switch
+            //LoggingHelpers.Log($"New Movement initialized: {direction}{rowOrCol}");
+            board = direction.ToLower() switch
             {
                 "r" => MoveRight(board, rowOrCol),
                 "l" => MoveLeft(board, rowOrCol),
                 "u" => MoveUp(board, rowOrCol),
                 "d" => MoveDown(board, rowOrCol),
-                _ => throw new ArgumentException("Invalid movement parameter received")
+                _ => board
             };
+            //LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(board));
+
+            return board;
         }
 
         private static char[][] MoveRight(this char[][] board, int index)
@@ -65,7 +90,6 @@
         {
             if (board.Length < index)
                 throw new ArgumentException("MoveUp: Index out of Bounds");
-            //var tempboard = (char[][])
 
             var newcell = board[board.Length-1][index];
             for (var i = board.Length-2; i >= 0; i--)
