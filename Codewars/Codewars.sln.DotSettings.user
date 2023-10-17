@@ -4,5 +4,7 @@
     &lt;TestId&gt;NUnit3x::B85724FA-8BE3-4C93-8B69-D1C3230545FD::net6.0::_8kyu_Implementations.GetPanetNameById.SolutionTest.Test&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::B50372CA-B2FA-4753-9375-E837FDE82E8F::net6.0::_6kyu_Implementations.DetectPangram.Tests.SampleTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::1EF8A28D-D3B2-4D5E-8D33-F30588DD408B::net6.0::_7kyu_Implementations.DescendingOrder.Tests.Test0&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::419381B9-DDBA-4FD5-9C56-7C8231FD2AAF::net6.0::_1kyu_Implementations.Loopover.LooperTest.Positive_Solvable&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::419381B9-DDBA-4FD5-9C56-7C8231FD2AAF::net6.0::_1kyu_Implementations.Loopover.LooperTest.Positive_Solvable("UFBCDEPK\nJSLXRATH\nOGNQVMWI","ABCDEFGH\nIJKLMNOP\nQRSTUVWX")&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

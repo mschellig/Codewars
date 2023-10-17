@@ -37,23 +37,22 @@ namespace _1kyu_Implementations.Loopover
             var seed = string.Empty;
             var board1Readable = board1.Aggregate(seed, (currentRow, row) => row.Aggregate(currentRow, (currentCol, c) => currentCol + c) + "##");
             var board2Readable = board2.Aggregate(seed, (currentRow, row) => row.Aggregate(currentRow, (currentCol, c) => currentCol + c) + "##");
-
             return board1Readable.Equals(board2Readable, StringComparison.Ordinal);
         }
 
-        public static Tuple<int, int> FindPositionInBoard(this char[][] board1, char search)
+        public static Position FindPositionInBoard(this char[][] board1, char search)
         {
             var positionY = Array.FindIndex(board1, 0, board1.Length, x => x.Contains(search));
             var positionX = Array.FindIndex(board1[positionY], 0, board1[positionY].Length, x => x.Equals(search));
-            return new Tuple<int, int>(positionX, positionY);
+            return new Position(positionX, positionY);
         }
 
-        public static bool IsParity(this char[][] board1, char[][] board2, Tuple<int,int> dimensions)
+        public static bool IsParity(this char[][] board1, char[][] board2, Position dimensions)
         {
-            var firstTile = board2[dimensions.Item2 - 2][dimensions.Item1 - 1];
-            var firstTileShould = board1[dimensions.Item2 - 2][dimensions.Item1 - 1];
-            var secondTile = board2[dimensions.Item2 - 1][dimensions.Item1 - 1];
-            var secondTileShould = board1[dimensions.Item2 - 1][dimensions.Item1 - 1];
+            var firstTile = board2[dimensions.Y - 1][dimensions.X];
+            var firstTileShould = board1[dimensions.Y - 1][dimensions.X];
+            var secondTile = board2[dimensions.Y][dimensions.X];
+            var secondTileShould = board1[dimensions.Y][dimensions.X];
 
             return firstTile.Equals(secondTileShould) &&
                    secondTile.Equals(firstTileShould);

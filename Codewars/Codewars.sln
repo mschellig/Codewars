@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2kyu_Implementations", "2ky
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1kyu_Implementations", "1kyu_Implementations\1kyu_Implementations.csproj", "{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1kyu_TestingExecutables", "1kyu_TestingExecutables\1kyu_TestingExecutables.csproj", "{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{419381B9-DDBA-4FD5-9C56-7C8231FD2AAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5B2EBB0-8679-4288-ADB5-D3D282535CAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

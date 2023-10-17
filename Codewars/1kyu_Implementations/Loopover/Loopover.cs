@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework.Interfaces;
+//using Solution;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -10,33 +12,27 @@ namespace _1kyu_Implementations.Loopover
     {
         #region VAR
 
-        private char[][] _startingboard;
         private char[][] _solvedboard;
         private char[][] _workingboard;
 
-        private List<string> _moveList =new();
+        private List<Move> _moveList = new();
 
-        private int _dimension_x = 0;
-        private int _dimension_y = 0;
-        private Tuple<int, int> _dimensionTuple;
+        private Position _arrayDimensionPosition;
+        private Position _realDimensionTuple;
 
-        private static int looper = 0;
         #endregion
 
-        #region PROP
-        #endregion
 
         #region CONST
+
         public Loopover(char[][] startingboard, char[][] solvedboard)
         {
-            _startingboard = startingboard;
             _workingboard = (char[][])startingboard.Clone();
             _solvedboard = solvedboard;
-            _dimension_y = startingboard.Length;
-            _dimension_x = startingboard[0].Length;
-            _dimensionTuple = Tuple.Create(_dimension_x, _dimension_y);
-
+            _realDimensionTuple = new Position(startingboard[0].Length, startingboard.Length);
+            _arrayDimensionPosition = new Position(startingboard[0].Length-1, startingboard.Length-1);
         }
+
         #endregion
 
         #region entrypoint
@@ -45,174 +41,174 @@ namespace _1kyu_Implementations.Loopover
         {
             LoggingHelpers.LogHeadline("Start solving loopover");
             LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(mixedUpBoard));
-
             var loopover = new Loopover(mixedUpBoard, solvedBoard);
+
             if (!loopover._workingboard.IsBoardEquals(loopover._solvedboard))
                 loopover._moveList.AddRange(loopover.SolvePhase1());
-            
+
             if (!loopover._workingboard.IsBoardEquals(loopover._solvedboard))
                 loopover._moveList.AddRange(loopover.SolvePhase2());
-            
+
             if (!loopover._workingboard.IsBoardEquals(loopover._solvedboard))
                 loopover._moveList.AddRange(loopover.SolvePhase3());
 
             if (!loopover._workingboard.IsBoardEquals(loopover._solvedboard))
             {
-                if (loopover._dimension_x % 2 == 0 && loopover._workingboard.IsParity(loopover._solvedboard, loopover._dimensionTuple))
+                if ((loopover._realDimensionTuple.X % 2 == 0 && loopover._realDimensionTuple.Y % 2 == 0) &&
+                    loopover._workingboard.IsParity(loopover._solvedboard, loopover._arrayDimensionPosition))
                 {
                     LoggingHelpers.LogHeadline("Start solving parity");
                     loopover._moveList.AddRange(loopover.SolveEvenParity());
-                    LoggingHelpers.LogHeadline(loopover._workingboard.IsBoardEquals(loopover._solvedboard)
-                        ? "Loopopver solved"
-                        : "Parity solving failed");
-                    return loopover._moveList;
+                    LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(loopover._workingboard));
+                    return MoveHelpers.ConvertToString(loopover._moveList);
                 }
-                else if (loopover._workingboard.IsParity(loopover._solvedboard, loopover._dimensionTuple))
+
+                if ((loopover._realDimensionTuple.Y % 2 == 0) &&
+                    loopover._workingboard.IsParity(loopover._solvedboard, loopover._arrayDimensionPosition))
                 {
-                    LoggingHelpers.LogHeadline("Odd Parity - not solvable");
-                    if (looper  == 0)
-                    {
-                        looper++;
-                        return Solve(loopover._workingboard, loopover._solvedboard);
-                    }
-
-                    return null;
+                    LoggingHelpers.LogHeadline("Start solving mixed parity");
+                    loopover._moveList.AddRange(loopover.SolveOddEvenParity(loopover._solvedboard));
+                    LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(loopover._workingboard));
+                    return MoveHelpers.ConvertToString(loopover._moveList);
                 }
 
+                if (loopover._realDimensionTuple.X % 2 == 0 &&
+                    loopover._workingboard.IsParity(loopover._solvedboard, loopover._realDimensionTuple))
+                {
+                    LoggingHelpers.LogHeadline("Start solving mixed parity");
+                    loopover._moveList.AddRange(loopover.SolveEvenOddParity(loopover._solvedboard));
+                    LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(loopover._workingboard));
+                    return MoveHelpers.ConvertToString(loopover._moveList);
+                }
             }
             else
             {
                 LoggingHelpers.LogHeadline("Loopopver solved");
                 LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(loopover._workingboard));
-                return loopover._moveList;
+                return MoveHelpers.ConvertToString(loopover._moveList);
             }
-            LoggingHelpers.LogHeadline("Something went wrong");
-            return loopover._moveList;
+            return MoveHelpers.ConvertToString(loopover._moveList);
+
         }
 
 
         #endregion
 
         #region PHASES
+
         //Phase 1 solves the inital quad (x=length-1, y=length-1)
-        private List<string> SolvePhase1()
+        private IEnumerable<Move> SolvePhase1()
         {
             LoggingHelpers.LogHeadline("Starting phase 1 - initial quad");
+            var returnal = new List<Move>();
 
-            var dimensionTuple = new Tuple<int,int>(_dimension_x, _dimension_y);
-            var returnal = new List<string>();
-
-            for (var i = 0; i < _dimension_y - 1; i++)
+            for (var i = 0; i < _arrayDimensionPosition.Y; i++)
             {
-                for (var j = 0; j < _dimension_x - 1; j++)
+                for (var j = 0; j < _arrayDimensionPosition.X; j++)
                 {
                     var currentPosition = _workingboard.FindPositionInBoard(_solvedboard[i][j]);
-                    LoggingHelpers.Log($"Next Character: {_solvedboard[i][j]} at current position X:{currentPosition.Item1}/Y:{currentPosition.Item2}");
+                    var movelist = PathHelpers.FindPathPhase1(currentPosition, new Position(_arrayDimensionPosition.X, i), _arrayDimensionPosition).ToList();
+                    movelist.Add(new Move("L", i));
 
-                    var movelist = PathHelpers.FindPathPhase1(currentPosition, new Tuple<int, int>(_dimension_x - 1, i), dimensionTuple);
-                    movelist.Add(new Tuple<char, int>('L', i));
-
-                    foreach (var m in movelist)
-                    {
-                        //LoggingHelpers.Log($"New Movement initialized: {m.Item1}{m.Item2}");
-                        _workingboard.MoveBoard(m.Item1, m.Item2);
-                        //LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(_workingboard));
-                    }
-                    returnal.AddRange(movelist.Select(x=>$"{x.Item1}{x.Item2}"));
+                    returnal.AddRange(_workingboard.MoveBoard(movelist));
                 }
             }
-
             LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(_workingboard));
             return returnal;
         }
 
         //Phase 2 solves the last column except the last field
-        private List<string> SolvePhase2()
+        private IEnumerable<Move> SolvePhase2()
         {
             LoggingHelpers.LogHeadline("Starting phase 2 - last column (except last tile)");
-            var returnal = new List<string>();
-            var sparePosition = Tuple.Create(_dimension_x - 2, _dimension_y - 1);
+            var sparePosition = new Position(_arrayDimensionPosition.X - 1, _arrayDimensionPosition.Y);
 
             //Move top right tile in place (special case)
-            var toprightPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_dimension_x - 1]);
-            LoggingHelpers.Log($"Next Character: {_solvedboard[0][_dimension_x - 1]} at current position X:{toprightPosition.Item1}/Y:{toprightPosition.Item2}");
-            var toprightMoves = PathHelpers.FindPathPhase1(toprightPosition, Tuple.Create(_dimension_x - 1, 0), _dimensionTuple);
-            _workingboard.MoveBoard(toprightMoves);
+            var toprightPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_arrayDimensionPosition.X]);
+            var toprightMoves = PathHelpers.FindPathPhase1(toprightPosition, new Position(_arrayDimensionPosition.X, 0), _arrayDimensionPosition);
+            var returnal = _workingboard.MoveBoard(toprightMoves).ToList();
 
 
-            for (var i = 1; i < _dimension_y - 1; i++)
+            for (var i = 1; i < _arrayDimensionPosition.Y; i++)
             {
-                var currentPosition = _workingboard.FindPositionInBoard(_solvedboard[i][_dimension_x - 1]);
-                LoggingHelpers.Log($"Next Character: {_solvedboard[i][_dimension_x - 1]} at current position X:{currentPosition.Item1}/Y:{currentPosition.Item2}");
+                var currentPosition = _workingboard.FindPositionInBoard(_solvedboard[i][_arrayDimensionPosition.X]);
 
                 //move needed tile in range
-                _workingboard.MoveBoard(PathHelpers.FindPathPhase2(currentPosition, sparePosition, _dimensionTuple));
-                
+                var tileInRangeMoves = PathHelpers.FindPathPhase2(currentPosition, sparePosition, _arrayDimensionPosition);
+                returnal.AddRange(_workingboard.MoveBoard(tileInRangeMoves));
+
                 //move corrected column in range
-                var currentColumnBeginningPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_dimension_x - 1]);
-                _workingboard.MoveBoard(PathHelpers.FindPathPhase2(currentColumnBeginningPosition, Tuple.Create(_dimension_x - 1, _dimension_y - 1-i), _dimensionTuple));
+                var currentColumnBeginningPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_arrayDimensionPosition.X]);
+                var correctedColumnMoves = PathHelpers.FindPathPhase2(currentColumnBeginningPosition, new Position(_arrayDimensionPosition.X, _arrayDimensionPosition.Y - i), _arrayDimensionPosition);
+                returnal.AddRange(_workingboard.MoveBoard(correctedColumnMoves));
 
                 //move needed tile in place
-                var movelist = PathHelpers.FindPathPhase2(sparePosition, new Tuple<int, int>(_dimension_x - 1, _dimension_y - 1), _dimensionTuple);
-                
+                var movelist = PathHelpers.FindPathPhase2(sparePosition, new Position(_arrayDimensionPosition.X, _arrayDimensionPosition.Y), _arrayDimensionPosition).ToList();
+
                 //move corrected column to top
-                currentColumnBeginningPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_dimension_x - 1]);
-                movelist.AddRange(PathHelpers.FindPathPhase2(currentColumnBeginningPosition, Tuple.Create(_dimension_x - 1, 0), _dimensionTuple));
-                _workingboard.MoveBoard(movelist);
+                currentColumnBeginningPosition = _workingboard.FindPositionInBoard(_solvedboard[0][_arrayDimensionPosition.X]);
+                movelist.AddRange(PathHelpers.FindPathPhase2(currentColumnBeginningPosition,new Position(_arrayDimensionPosition.X, 0), _arrayDimensionPosition));
+                returnal.AddRange(_workingboard.MoveBoard(movelist));
             }
+
             LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(_workingboard));
 
             return returnal;
         }
 
         //Phase 3 solves last row
-        private List<string> SolvePhase3()
+        private IEnumerable<Move> SolvePhase3()
         {
             LoggingHelpers.LogHeadline("Starting phase 3 - last row ");
-            var returnal = new List<string>();
-            var sparePosition = Tuple.Create(_dimension_x - 1, _dimension_y - 1);
-            var spareAttachPosition = Tuple.Create(_dimension_x - 2, _dimension_y - 1);
-            var stuckPosition = Tuple.Create(_dimension_x - 1, _dimension_y - 2);
+            var returnal = new List<Move>();
 
-            for (var i = 1; i < _dimension_x - 1; i++)
+            var sparePosition = new Position(_arrayDimensionPosition.X, _arrayDimensionPosition.Y);
+            var spareAttachPosition = new Position(_arrayDimensionPosition.X - 1, _arrayDimensionPosition.Y);
+            var stuckPosition = new Position(_arrayDimensionPosition.X, _arrayDimensionPosition.Y - 1);
+
+            for (var i = 1; i < _arrayDimensionPosition.X; i++)
             {
-                var currentPosition = _workingboard.FindPositionInBoard(_solvedboard[_dimension_y-1][i]);
-                LoggingHelpers.Log($"Next Character: {_solvedboard[_dimension_y - 1][i]} at current position X:{currentPosition.Item1}/Y:{currentPosition.Item2}");
+                var currentPosition = _workingboard.FindPositionInBoard(_solvedboard[_arrayDimensionPosition.Y][i]);
 
                 //unstuck tile if stuck
                 if (currentPosition.Equals(stuckPosition))
                 {
                     //move first tile to start
-                    var firstTilePosition = _workingboard.FindPositionInBoard(_solvedboard[_dimension_y-1][0]);
-                    _workingboard.MoveBoard(PathHelpers.FindPathPhase2(firstTilePosition, Tuple.Create(0, _dimension_y-1), _dimensionTuple));
+                    var firstTilePosition = _workingboard.FindPositionInBoard(_solvedboard[_arrayDimensionPosition.Y][0]);
+                    var firstTileMove = PathHelpers.FindPathPhase2(firstTilePosition, new Position(0, _arrayDimensionPosition.Y), _arrayDimensionPosition);
+                    returnal.AddRange(_workingboard.MoveBoard(firstTileMove));
+
                     //move stuck in spare
-                    _workingboard.MoveBoard('D', _dimension_x - 1);
+                    returnal.Add(_workingboard.MoveBoard('D', _arrayDimensionPosition.X));
                     //move stuck out of the way
-                    _workingboard.MoveBoard('R', _dimension_y - 1);
+                    returnal.Add(_workingboard.MoveBoard('R', _arrayDimensionPosition.Y));
                     //return last column to start
-                    _workingboard.MoveBoard('U', _dimension_x - 1);
+                    returnal.Add(_workingboard.MoveBoard('U', _arrayDimensionPosition.X));
                     //move stuck in spare
-                    _workingboard.MoveBoard('L', _dimension_y - 1);
+                    returnal.Add(_workingboard.MoveBoard('L', _arrayDimensionPosition.Y));
                 }
 
                 //move needed tile in range
                 //find position again, if unstuck
-                currentPosition = _workingboard.FindPositionInBoard(_solvedboard[_dimension_y - 1][i]);
-                _workingboard.MoveBoard(PathHelpers.FindPathPhase2(currentPosition, sparePosition, _dimensionTuple));
+                currentPosition = _workingboard.FindPositionInBoard(_solvedboard[_arrayDimensionPosition.Y][i]);
+                var firstTileRangeMove = PathHelpers.FindPathPhase2(currentPosition, sparePosition, _arrayDimensionPosition);
+                returnal.AddRange(_workingboard.MoveBoard(firstTileRangeMove));
 
                 //move needed tile in storage
-                _workingboard.MoveBoard('D', _dimension_x - 1);
+                returnal.Add(_workingboard.MoveBoard('D', _arrayDimensionPosition.X));
 
                 //move previous tile in range
-                var previousPosition = _workingboard.FindPositionInBoard(_solvedboard[_dimension_y - 1][i-1]);
-                _workingboard.MoveBoard(PathHelpers.FindPathPhase2(previousPosition, spareAttachPosition, _dimensionTuple));
+                var previousPosition = _workingboard.FindPositionInBoard(_solvedboard[_arrayDimensionPosition.Y][i - 1]);
+                var previousTileRangeMove =
+                    PathHelpers.FindPathPhase2(previousPosition, spareAttachPosition, _arrayDimensionPosition);
+                returnal.AddRange(_workingboard.MoveBoard(previousTileRangeMove));
 
                 //move needed tile back from storage
-                _workingboard.MoveBoard('U', _dimension_x - 1);
+                returnal.Add(_workingboard.MoveBoard("U", _arrayDimensionPosition.X));
 
             }
-            _workingboard.MoveBoard('L', _dimension_y - 1);
 
+            returnal.Add(_workingboard.MoveBoard('L', _arrayDimensionPosition.Y));
             LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(_workingboard));
 
             return returnal;
@@ -220,43 +216,58 @@ namespace _1kyu_Implementations.Loopover
 
 
         //Parity Solver
-        private List<string> SolveEvenParity()
+        private IEnumerable<Move> SolveEvenParity()
         {
-            var returnal = new List<string>();
-
-            for (var i = 0; i < _dimension_x / 2; i++)
+            for (var i = 0; i < _arrayDimensionPosition.X / 2; i++)
             {
-                _workingboard.MoveBoard('L', _dimension_y - 1);
-                returnal.Add("L" + (_dimension_y - 1));
-                _workingboard.MoveBoard('D', _dimension_x - 1);
-                returnal.Add("D" + (_dimension_x - 1));
-                _workingboard.MoveBoard('L', _dimension_y - 1);
-                returnal.Add("L" + (_dimension_y - 1));
-                _workingboard.MoveBoard('U', _dimension_x - 1);
-                returnal.Add("U" + (_dimension_x - 1));
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('U', _arrayDimensionPosition.X);
             }
-            _workingboard.MoveBoard('L', _dimension_y - 1);
-            returnal.Add("L" + (_dimension_y - 1));
-            return returnal;
+
+            yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.X);
         }
+
+        private IEnumerable<Move> SolveEvenOddParity(char[][] solvedboard)
+        {
+            var loopcounter = 0;
+            while (loopcounter < 4 && !_workingboard.IsBoardEquals(solvedboard))
+            {
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('U', _arrayDimensionPosition.X);
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+
+                if (!_workingboard.IsBoardEquals(solvedboard))
+                {
+                    yield return _workingboard.MoveBoard('R', _arrayDimensionPosition.Y);
+                    loopcounter++;
+                }
+            }
+        }
+
+        private IEnumerable<Move> SolveOddEvenParity(char[][] solvedboard)
+        {
+            var loopcounter = 0;
+
+            yield return _workingboard.MoveBoard('R', _arrayDimensionPosition.Y);
+            yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+            yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+            yield return _workingboard.MoveBoard('U', _arrayDimensionPosition.X);
+
+            yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+            while (loopcounter < _arrayDimensionPosition.Y && !_workingboard.IsBoardEquals(solvedboard))
+            {
+                yield return _workingboard.MoveBoard('R', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
+                yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
+                loopcounter++;
+            }
+        }
+
         #endregion
-
-        private static void ManuallySolve(Loopover loopover)
-        {
-            //try again
-            while (!loopover._workingboard.IsBoardEquals(loopover._solvedboard))
-            {
-                var input = Console.ReadLine();
-                var move = input.ToCharArray()[0].ToString();
-                var index = int.Parse(input.ToCharArray()[1].ToString());
-                loopover._workingboard.MoveBoard(move, index);
-
-                Console.WriteLine("---------- Move done: " + move + index + " ----------");
-                Console.WriteLine(BoardHelpers.GetReadableBoard(loopover._workingboard));
-
-
-            }
-        }
-
     }
 }
