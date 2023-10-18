@@ -73,7 +73,7 @@ namespace _1kyu_Implementations.Loopover
                 }
 
                 if (loopover._realDimensionTuple.X % 2 == 0 &&
-                    loopover._workingboard.IsParity(loopover._solvedboard, loopover._realDimensionTuple))
+                    loopover._workingboard.IsParity(loopover._solvedboard, loopover._arrayDimensionPosition))
                 {
                     LoggingHelpers.LogHeadline("Start solving mixed parity");
                     loopover._moveList.AddRange(loopover.SolveEvenOddParity(loopover._solvedboard));
@@ -87,7 +87,8 @@ namespace _1kyu_Implementations.Loopover
                 LoggingHelpers.LogBlank(BoardHelpers.GetReadableBoard(loopover._workingboard));
                 return MoveHelpers.ConvertToString(loopover._moveList);
             }
-            return MoveHelpers.ConvertToString(loopover._moveList);
+
+            return null;
 
         }
 
@@ -215,18 +216,21 @@ namespace _1kyu_Implementations.Loopover
         }
 
 
+        
         //Parity Solver
         private IEnumerable<Move> SolveEvenParity()
         {
-            for (var i = 0; i < _arrayDimensionPosition.X / 2; i++)
-            {
-                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
-                yield return _workingboard.MoveBoard('D', _arrayDimensionPosition.X);
-                yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.Y);
-                yield return _workingboard.MoveBoard('U', _arrayDimensionPosition.X);
-            }
+            var returnal = new List<Move>();
 
-            yield return _workingboard.MoveBoard('L', _arrayDimensionPosition.X);
+            for (var i = 0; i < _realDimensionTuple.X / 2; i++)
+            {
+                returnal.Add(_workingboard.MoveBoard('L', _arrayDimensionPosition.Y));
+                returnal.Add(_workingboard.MoveBoard('D', _arrayDimensionPosition.X));
+                returnal.Add(_workingboard.MoveBoard('L', _arrayDimensionPosition.Y));
+                returnal.Add(_workingboard.MoveBoard('U', _arrayDimensionPosition.X));
+            }
+            returnal.Add(_workingboard.MoveBoard('L', _arrayDimensionPosition.Y));
+            return returnal;
         }
 
         private IEnumerable<Move> SolveEvenOddParity(char[][] solvedboard)

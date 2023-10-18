@@ -5,6 +5,9 @@ namespace _1kyu_Implementations.Loopover
     [TestFixture]
     public class LooperTest
     {
+        
+        [TestCase("WCMDJ\nORFBA\nKNGLY\nPHVSE\nTXQUI", "ABCDE\nFGHIJ\nKLMNO\nPQRST\nUVWXY")]
+
         public void Negative_Solvable(string start, string solved)
         {
             var test_start = BoardHelpers.FormatStringToBoard(start);
@@ -17,6 +20,9 @@ namespace _1kyu_Implementations.Loopover
             Assert.AreEqual(false, moves != null);
         }
 
+        [TestCase("KCBH\nFLJE\nGAID", "ABCD\nEFGH\nIJKL")]
+        [TestCase("DGVO\nPHUX\nNWRB\nJQMS\nLTCA\nIEFK", "ABCD\nEFGH\nIJKL\nMNOP\nQRST\nUVWX")]
+        [TestCase("WCMDJ0\nORFBA1\nKNGLY2\nPHVSE3\nTXQUI4\nZ56789", "ABCDEF\nGHIJKL\nMNOPQR\nSTUVWX\nYZ0123\n456789")]
         [TestCase("UFBCDEPK\nJSLXRATH\nOGNQVMWI", "ABCDEFGH\nIJKLMNOP\nQRSTUVWX")]
         [TestCase("BF\nCE\nAD\nHG", "AB\nCD\nEF\nGH")]
         [TestCase("ACDBE\nFGHIJ\nKLMNO\nPQRST", "ABCDE\nFGHIJ\nKLMNO\nPQRST")]
@@ -43,6 +49,7 @@ namespace _1kyu_Implementations.Loopover
 
         private static bool Check_Moves(List<string> moves, char[][] startingboard, char[][] solvedboard)
         {
+            if (moves == null) return false;
             startingboard.MoveBoard(moves);
             return startingboard.IsBoardEquals(solvedboard);
         }
