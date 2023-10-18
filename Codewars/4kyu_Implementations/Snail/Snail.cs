@@ -14,43 +14,14 @@ namespace _4kyu_Implementations.Snail
             var returnal = new List<int>();
 
             var iterations = 0;
-
+            var targetPosition = 0;
             var position_x = 0;
             var position_y = 0;
-
-            var inverse_x = true;
+            var inverse_x = false;
             var inverse_y = false;
 
-            //do first row
-            var targetPosition = array[0].Length - 1 - iterations;
-            returnal.AddRange(HorizontalSolve(array, position_x, array[0].Length - 1 - iterations, 0));
-            position_x = targetPosition;
-            position_y++;
-
-
-            //TODO change while to returnal count < array.Lengt8h * array[0].Length
-            //TODO add moveCounter - ++ after each row/col
-            //TODO  iteration ++ after 3 moveCount
-
-            while (iterations < (array.Length + array[0].Length-2) /2)
+            while (returnal.Count < array.Length * array[0].Length)
             {
-                if (!inverse_y)
-                {
-                    targetPosition = array.Length - 1 - iterations;
-                    returnal.AddRange(VerticalSolve(array, position_y, targetPosition, position_x));
-                    position_y = targetPosition;
-                    position_x--;
-                }
-                else
-                {
-                    targetPosition = 0 + iterations;
-                    returnal.AddRange(VerticalSolve(array, position_y, targetPosition, position_x));
-                    position_y = targetPosition;
-                    position_x++;
-                }
-
-                inverse_y = !inverse_y;
-
                 if (!inverse_x)
                 {
                     targetPosition = array[0].Length - 1 - iterations;
@@ -67,8 +38,24 @@ namespace _4kyu_Implementations.Snail
                 }
                 inverse_x = !inverse_x;
 
+                if (returnal.Count >= array.Length * array[0].Length) break;
+                if (!inverse_y)
+                {
+                    targetPosition = array.Length - 1 - iterations;
+                    returnal.AddRange(VerticalSolve(array, position_y, targetPosition, position_x));
+                    position_y = targetPosition;
+                    position_x--;
+                }
+                else
+                {
+                    iterations++;
+                    targetPosition = 0 + iterations;
+                    returnal.AddRange(VerticalSolve(array, position_y, targetPosition, position_x));
+                    position_y = targetPosition;
+                    position_x++;
+                }
 
-                iterations++;
+                inverse_y = !inverse_y;
             }
 
             return returnal.ToArray();
